@@ -20,18 +20,31 @@ const Options = ({ good, neutral, bad }) => (
     </div>
 )
 
-const StatisticsPart = ({ text, value }) => (
-    <div>
-        <p>{text} {value}</p>
-    </div>
+const Average = ({ goodValue, neutralValue, badValue }) => {
+    const average = (goodValue * 1 + neutralValue * 0 + badValue * -1)
+        / (goodValue + neutralValue + badValue)
+
+    return <div>Keskiarvo {average}</div>
+}
+
+const Positive = ({goodValue, neutralValue, badValue}) => {
+    const positive = goodValue / (goodValue + neutralValue + badValue) * 100
+
+    return <div>Positiivisia {positive} %</div>
+}
+
+const OptionStatistics = ({ text, value }) => (
+    <div>{text} {value}</div>
 )
 
-const Statistics = ({ header, good, neutral, bad }) => (
+const Statistics = ({ good, neutral, bad }) => (
     <div>
-        <h2>{header}</h2>
-        <StatisticsPart text={good.text} value={good.value} />
-        <StatisticsPart text={neutral.text} value={neutral.value} />
-        <StatisticsPart text={bad.text} value={bad.value} />
+        <h2>Statistiikka</h2>
+        <OptionStatistics text={good.text} value={good.value} />
+        <OptionStatistics text={neutral.text} value={neutral.value} />
+        <OptionStatistics text={bad.text} value={bad.value} />
+        <Average goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
+        <Positive goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
     </div>
 )
 
@@ -64,11 +77,8 @@ const App = () => {
     return (
         <div>
             <Header />
-            <Options 
-                good={goodOption} neutral={neutralOption} bad={badOption} />
-            <Statistics
-                header="Statistiikka" 
-                good={goodOption} neutral={neutralOption} bad={badOption} />
+            <Options good={goodOption} neutral={neutralOption} bad={badOption} />
+            <Statistics good={goodOption} neutral={neutralOption} bad={badOption} />
         </div>
     )
 }
