@@ -24,16 +24,16 @@ const Average = ({ goodValue, neutralValue, badValue }) => {
     const average = (goodValue * 1 + neutralValue * 0 + badValue * -1)
         / (goodValue + neutralValue + badValue)
 
-    return <div>Keskiarvo {average}</div>
+    return <Statistic text="Keskiarvo" value={average} />
 }
 
 const Positive = ({ goodValue, neutralValue, badValue }) => {
-    const positive = goodValue / (goodValue + neutralValue + badValue) * 100
+    const positive = goodValue / (goodValue + neutralValue + badValue) * 100 + ' %'
 
-    return <div>Positiivisia {positive} %</div>
+    return <Statistic text="Positiivisia" value={positive} />
 }
 
-const OptionStatistics = ({ text, value }) => (
+const Statistic = ({ text, value }) => (
     <div>{text} {value}</div>
 )
 
@@ -42,9 +42,9 @@ const StatisticsContent = ({ good, neutral, bad }) => {
     if (good.value > 0 || neutral.value > 0 || bad.value > 0)
         content = (
             <div>
-                <OptionStatistics text={good.text} value={good.value} />
-                <OptionStatistics text={neutral.text} value={neutral.value} />
-                <OptionStatistics text={bad.text} value={bad.value} />
+                <Statistic text={good.text} value={good.value} />
+                <Statistic text={neutral.text} value={neutral.value} />
+                <Statistic text={bad.text} value={bad.value} />
                 <Average goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
                 <Positive goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
             </div>
