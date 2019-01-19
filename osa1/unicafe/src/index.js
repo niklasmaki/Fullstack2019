@@ -27,7 +27,7 @@ const Average = ({ goodValue, neutralValue, badValue }) => {
     return <div>Keskiarvo {average}</div>
 }
 
-const Positive = ({goodValue, neutralValue, badValue}) => {
+const Positive = ({ goodValue, neutralValue, badValue }) => {
     const positive = goodValue / (goodValue + neutralValue + badValue) * 100
 
     return <div>Positiivisia {positive} %</div>
@@ -37,16 +37,28 @@ const OptionStatistics = ({ text, value }) => (
     <div>{text} {value}</div>
 )
 
+const StatisticsContent = ({ good, neutral, bad }) => {
+    let content = <div>Ei yhtään palautetta annettu</div>
+    if (good.value > 0 || neutral.value > 0 || bad.value > 0)
+        content = (
+            <div>
+                <OptionStatistics text={good.text} value={good.value} />
+                <OptionStatistics text={neutral.text} value={neutral.value} />
+                <OptionStatistics text={bad.text} value={bad.value} />
+                <Average goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
+                <Positive goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
+            </div>
+        )
+    return content
+}
+
 const Statistics = ({ good, neutral, bad }) => (
     <div>
         <h2>Statistiikka</h2>
-        <OptionStatistics text={good.text} value={good.value} />
-        <OptionStatistics text={neutral.text} value={neutral.value} />
-        <OptionStatistics text={bad.text} value={bad.value} />
-        <Average goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
-        <Positive goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
+        <StatisticsContent good={good} neutral={neutral} bad={bad} />
     </div>
 )
+
 
 const App = () => {
     // tallenna napit omaan tilaansa
