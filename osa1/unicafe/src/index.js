@@ -34,20 +34,25 @@ const Positive = ({ goodValue, neutralValue, badValue }) => {
 }
 
 const Statistic = ({ text, value }) => (
-    <div>{text} {value}</div>
+    <tr>
+        <td>{text}</td>
+        <td>{value}</td>
+    </tr>
 )
 
 const StatisticsContent = ({ good, neutral, bad }) => {
     let content = <div>Ei yhtään palautetta annettu</div>
     if (good.value > 0 || neutral.value > 0 || bad.value > 0)
         content = (
-            <div>
-                <Statistic text={good.text} value={good.value} />
-                <Statistic text={neutral.text} value={neutral.value} />
-                <Statistic text={bad.text} value={bad.value} />
-                <Average goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
-                <Positive goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
-            </div>
+            <table>
+                <tbody>
+                    <Statistic text={good.text} value={good.value} />
+                    <Statistic text={neutral.text} value={neutral.value} />
+                    <Statistic text={bad.text} value={bad.value} />
+                    <Average goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
+                    <Positive goodValue={good.value} neutralValue={neutral.value} badValue={bad.value} />
+                </tbody>
+            </table>
         )
     return content
 }
