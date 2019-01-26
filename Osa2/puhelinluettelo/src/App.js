@@ -9,6 +9,7 @@ const App = () => {
   ])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [filter, setFilter] = useState('')
 
   const updateNewName = (event) => {
     setNewName(event.target.value)
@@ -16,6 +17,10 @@ const App = () => {
 
   const updateNewNumber = (event) => {
     setNewNumber(event.target.value)
+  }
+
+  const updateFilter = (event) => {
+    setFilter(event.target.value)
   }
 
   const addPerson = (event) => {
@@ -29,26 +34,38 @@ const App = () => {
     setNewNumber('')
   }
 
+  const getPersons = () => (
+    persons.filter(
+      person => new RegExp(filter, "i").test(person.name)
+    ).map(
+      person => (
+        <div key={person.name}>
+          {person.name} {person.number}
+        </div>
+      )
+    )
+  )
+
   return (
     <div>
       <h2>Puhelinluettelo</h2>
+      <div>
+        Rajaa: <input value={filter} onChange={updateFilter} />
+      </div>
+      <h2>Lisää uusi</h2>
       <form onSubmit={addPerson}>
         <div>
-          nimi: <input value={newName} onChange={updateNewName} />
+          Nimi: <input value={newName} onChange={updateNewName} />
         </div>
         <div>
-          numero: <input value={newNumber} onChange={updateNewNumber} />
+          Numero: <input value={newNumber} onChange={updateNewNumber} />
         </div>
         <div>
           <button type="submit">lisää</button>
         </div>
       </form>
       <h2>Numerot</h2>
-      {persons.map((person) => (
-        <div key={person.name}>
-          {person.name} {person.number}
-        </div>
-      ))}
+      {getPersons()}
     </div>
   )
 
