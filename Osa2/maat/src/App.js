@@ -11,6 +11,35 @@ const LanguageEntry = ({ language }) => (
   <li>{language}</li>
 )
 
+const Weather = ({ city }) => {
+  const baseUrl = 'https://api.apixu.com/v1/current.json'
+  const key = 'XXXXX'
+  const queryURL = baseUrl + '?key=' + key + '&q='
+  const [weather, setWeather] = useState({})
+  useEffect(() => {
+    axios
+      .get(queryURL + city)
+      .then(response => {
+        setWeather(response.data)
+      })
+  }, [])
+
+  if (!weather.hasOwnProperty('current')) return null
+  return (
+    <div>
+      <div>
+        <b>Temperature:</b> {weather.current.temp_c} Celsius
+      </div>
+      <div>
+        <img src={weather.current.condition.icon} alt="Weather icon" />
+      </div>
+      <div>
+        <b>Wind: </b> {weather.current.wind_kph} kph direction {weather.current.wind_dir}
+      </div>
+    </div>
+  )
+}
+
 const Country = ({ country }) => (
   <div>
     <h1>{country.name}</h1>
@@ -25,6 +54,8 @@ const Country = ({ country }) => (
       {country.languages.map(language => <LanguageEntry key={language.name} language={language.name} />)}
     </ul>
     <img src={country.flag} width='200px' alt='flag' />
+    <h2>Weather in {country.capital}</h2>
+    <Weather city={country.capital} />
   </div>
 )
 
