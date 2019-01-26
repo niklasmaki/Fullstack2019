@@ -1,5 +1,48 @@
 import React, { useState } from 'react'
 
+const Filter = ({ filter, updateFilter }) => (
+  <div>
+    Rajaa: <input value={filter} onChange={updateFilter} />
+  </div>
+)
+
+const PersonForm = ({ addPerson, newName, updateNewName, newNumber, updateNewNumber }) => (
+  <form onSubmit={addPerson}>
+    <div>
+      Nimi: <input value={newName} onChange={updateNewName} />
+    </div>
+    <div>
+      Numero: <input value={newNumber} onChange={updateNewNumber} />
+    </div>
+    <div>
+      <button type="submit">lisää</button>
+    </div>
+  </form>
+)
+
+const Person = ({ person }) => (
+  <div>
+    {person.name} {person.number}
+  </div>
+)
+
+const Persons = ({ persons, filter }) => {
+
+  const getPersons = () => (
+    persons.filter(
+      person => new RegExp(filter, "i").test(person.name)
+    ).map(
+      person => <Person key={person.name} person={person} />
+    )
+  )
+  
+  return (
+    <div>
+      {getPersons()}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([
     { name: 'Arto Hellas', number: '040-123456' },
@@ -34,39 +77,27 @@ const App = () => {
     setNewNumber('')
   }
 
-  const getPersons = () => (
-    persons.filter(
-      person => new RegExp(filter, "i").test(person.name)
-    ).map(
-      person => (
-        <div key={person.name}>
-          {person.name} {person.number}
-        </div>
-      )
-    )
-  )
-
   return (
     <div>
-      <h2>Puhelinluettelo</h2>
-      <div>
-        Rajaa: <input value={filter} onChange={updateFilter} />
-      </div>
+      <h1>Puhelinluettelo</h1>
+
+      <Filter filter={filter} updateFilter={updateFilter} />
+
       <h2>Lisää uusi</h2>
-      <form onSubmit={addPerson}>
-        <div>
-          Nimi: <input value={newName} onChange={updateNewName} />
-        </div>
-        <div>
-          Numero: <input value={newNumber} onChange={updateNewNumber} />
-        </div>
-        <div>
-          <button type="submit">lisää</button>
-        </div>
-      </form>
+
+      <PersonForm
+        addPerson={addPerson}
+        newName={newName}
+        updateNewName={updateNewName}
+        newNumber={newNumber}
+        updateNewNumber={updateNewNumber}
+      />
+
       <h2>Numerot</h2>
-      {getPersons()}
-    </div>
+
+      <Persons persons={persons} filter={filter} />
+
+    </div >
   )
 
 }
