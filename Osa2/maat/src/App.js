@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 
-const CountryEntry = ({ name }) => (
-  <div>{name}</div>
+const CountryEntry = ({ name, handleClick }) => (
+  <div>
+    {name} <button country={name} onClick={handleClick}>Show</button>
+  </div>
 )
 
 const LanguageEntry = ({ language }) => (
@@ -26,7 +28,7 @@ const Country = ({ country }) => (
   </div>
 )
 
-const Countries = ({ countries, searchString }) => {
+const Countries = ({ countries, searchString, showCountry }) => {
 
   if (searchString === '') return null
 
@@ -42,7 +44,12 @@ const Countries = ({ countries, searchString }) => {
       return <Country country={filteredCountries[0]} />
     }
     return filteredCountries
-      .map(country => <CountryEntry key={country.name} name={country.name} />)
+      .map(country =>
+        <CountryEntry
+          key={country.name}
+          name={country.name}
+          handleClick={showCountry} />
+      )
   }
 
   return (
@@ -70,15 +77,18 @@ const App = () => {
       })
   }, [])
 
-  const search = (event) => {
+  const search = event => {
     setSearchString(event.target.value)
   }
 
+  const showCountry = event => {
+    setSearchString(event.target.getAttribute('country'))
+  }
 
   return (
     <div>
       <Search searchString={searchString} search={search} />
-      <Countries countries={countries} searchString={searchString} />
+      <Countries countries={countries} searchString={searchString} showCountry={showCountry} />
     </div>
   )
 }
