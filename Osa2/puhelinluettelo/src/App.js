@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = ({ filter, updateFilter }) => (
   <div>
@@ -51,10 +51,10 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
+    personService
+      .getAll()
+      .then(persons => {
+        setPersons(persons)
       })
   }, [])
 
@@ -76,9 +76,8 @@ const App = () => {
       alert(`${newName} on jo luettelossa!`)
       return
     }
-    axios
-      .post('http://localhost:3001/persons', { name: newName, number: newNumber })
-      .then(response => response.data)
+    personService
+      .add({ name: newName, number: newNumber })
       .then(person => {
         setPersons(persons.concat(person))
       })
