@@ -21,19 +21,23 @@ const PersonForm = ({ addPerson, newName, updateNewName, newNumber, updateNewNum
   </form>
 )
 
-const Person = ({ person }) => (
+const Person = ({ person, removePerson }) => (
   <div>
-    {person.name} {person.number}
+    {person.name} {person.number} <button onClick={removePerson}>Poista</button>
   </div>
 )
 
-const Persons = ({ persons, filter }) => {
+const Persons = ({ persons, filter, removePerson }) => {
 
   const getPersons = () => (
     persons.filter(
       person => new RegExp(filter, "i").test(person.name)
     ).map(
-      person => <Person key={person.name} person={person} />
+      person => <Person 
+        key={person.id} 
+        person={person} 
+        removePerson={() => removePerson(person.name, person.id)} 
+      />
     )
   )
 
@@ -85,6 +89,16 @@ const App = () => {
     setNewNumber('')
   }
 
+  const removePerson = (name, id) => {
+    if (window.confirm(`Poistetaanko ${name}?`)) {
+      personService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+        })
+    }
+  }
+
   return (
     <div>
       <h1>Puhelinluettelo</h1>
@@ -103,7 +117,7 @@ const App = () => {
 
       <h2>Numerot</h2>
 
-      <Persons persons={persons} filter={filter} />
+      <Persons persons={persons} filter={filter} removePerson={removePerson} />
 
     </div >
   )
