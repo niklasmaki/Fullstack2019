@@ -76,7 +76,12 @@ const App = () => {
       alert(`${newName} on jo luettelossa!`)
       return
     }
-    setPersons(persons.concat({ name: newName, number: newNumber }))
+    axios
+      .post('http://localhost:3001/persons', { name: newName, number: newNumber })
+      .then(response => response.data)
+      .then(person => {
+        setPersons(persons.concat(person))
+      })
     setNewName('')
     setNewNumber('')
   }
