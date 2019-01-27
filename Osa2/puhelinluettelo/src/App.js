@@ -33,10 +33,10 @@ const Persons = ({ persons, filter, removePerson }) => {
     persons.filter(
       person => new RegExp(filter, "i").test(person.name)
     ).map(
-      person => <Person 
-        key={person.id} 
-        person={person} 
-        removePerson={() => removePerson(person.name, person.id)} 
+      person => <Person
+        key={person.id}
+        person={person}
+        removePerson={() => removePerson(person.name, person.id)}
       />
     )
   )
@@ -74,11 +74,21 @@ const App = () => {
     setFilter(event.target.value)
   }
 
+  const replaceNumber = person => {
+    if (window.confirm(`${newName} on jo luettelossa, korvataanko vanha numero uudella?`)) {
+      personService
+        .update({...person, number: newNumber})
+        .then(updatedPerson => {
+          setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
+        })
+    }
+  }
+
   const addPerson = (event) => {
     event.preventDefault()
-    if (persons.find(person => person.name === newName)) {
-      alert(`${newName} on jo luettelossa!`)
-      return
+    const existingPerson = persons.find(person => person.name === newName)
+    if (existingPerson) {
+      return replaceNumber(existingPerson)
     }
     personService
       .add({ name: newName, number: newNumber })
