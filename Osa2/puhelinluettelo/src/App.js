@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './App.css'
 
 const Filter = ({ filter, updateFilter }) => (
   <div>
@@ -48,11 +49,23 @@ const Persons = ({ persons, filter, removePerson }) => {
   )
 }
 
+const Notification = ({ message }) => {
+  if (!message) return null
+
+  return (
+    <div className="notification">
+      {message}
+    </div>
+  )
+
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
+  const [notification, setNotification] = useState('')
 
   useEffect(() => {
     personService
@@ -77,10 +90,11 @@ const App = () => {
   const replaceNumber = person => {
     if (window.confirm(`${newName} on jo luettelossa, korvataanko vanha numero uudella?`)) {
       personService
-        .update({...person, number: newNumber})
+        .update({ ...person, number: newNumber })
         .then(updatedPerson => {
           setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
         })
+      notify(`Muutettiin henkilön ${person.name} numero`)
     }
   }
 
@@ -95,6 +109,7 @@ const App = () => {
       .then(person => {
         setPersons(persons.concat(person))
       })
+    notify(`Lisättiin ${newName}`)
     setNewName('')
     setNewNumber('')
   }
@@ -106,12 +121,22 @@ const App = () => {
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
         })
+      notify(`Poistettiin ${name}`)
     }
+  }
+
+  const notify = message => {
+    setNotification(message)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000)
   }
 
   return (
     <div>
       <h1>Puhelinluettelo</h1>
+
+      <Notification message={notification} />
 
       <Filter filter={filter} updateFilter={updateFilter} />
 
