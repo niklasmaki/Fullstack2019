@@ -57,7 +57,16 @@ const Notification = ({ message }) => {
       {message}
     </div>
   )
+}
 
+const ErrorNotification = ({ message }) => {
+  if (!message) return null
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
 }
 
 const App = () => {
@@ -66,6 +75,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     personService
@@ -120,8 +130,12 @@ const App = () => {
         .remove(id)
         .then(() => {
           setPersons(persons.filter(person => person.id !== id))
+          notify(`Poistettiin ${name}`)
         })
-      notify(`Poistettiin ${name}`)
+        .catch(error => {
+          setPersons(persons.filter(person => person.id !== id))
+          notifyError(`Henkilö ${name} oli jo poistettu palvelimelta`)
+        })
     }
   }
 
@@ -132,11 +146,19 @@ const App = () => {
     }, 5000)
   }
 
+  const notifyError = message => {
+    setError(message)
+    setTimeout(() => {
+      setError('')
+    }, 5000)
+  }
+
   return (
     <div>
       <h1>Puhelinluettelo</h1>
 
       <Notification message={notification} />
+      <ErrorNotification message={error} />
 
       <Filter filter={filter} updateFilter={updateFilter} />
 
