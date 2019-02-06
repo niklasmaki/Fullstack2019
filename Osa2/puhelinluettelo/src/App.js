@@ -103,8 +103,11 @@ const App = () => {
         .update({ ...person, number: newNumber })
         .then(updatedPerson => {
           setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
+          notify(`Muutettiin henkilön ${person.name} numero`)
         })
-      notify(`Muutettiin henkilön ${person.name} numero`)
+        .catch(error => {
+          notifyError(error.response.data.error)
+        })
     }
   }
 
@@ -118,10 +121,14 @@ const App = () => {
       .add({ name: newName, number: newNumber })
       .then(person => {
         setPersons(persons.concat(person))
+        notify(`Lisättiin ${newName}`)
+        setNewName('')
+        setNewNumber('')
       })
-    notify(`Lisättiin ${newName}`)
-    setNewName('')
-    setNewNumber('')
+      .catch(error => {
+        notifyError(error.response.data.error)
+      })
+
   }
 
   const removePerson = (name, id) => {
