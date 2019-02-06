@@ -104,6 +104,8 @@ const App = () => {
         .then(updatedPerson => {
           setPersons(persons.map(p => p.id !== person.id ? p : updatedPerson))
           notify(`Muutettiin henkilön ${person.name} numero`)
+          setNewName('')
+          setNewNumber('')
         })
         .catch(error => {
           notifyError(error.response.data.error)
