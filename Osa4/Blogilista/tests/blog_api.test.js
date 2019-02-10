@@ -52,7 +52,7 @@ const initialBlogs = [
     url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     likes: 2,
     __v: 0
-  }  
+  }
 ]
 
 beforeEach(async () => {
@@ -72,27 +72,42 @@ test('all blogs are returned', async () => {
 })
 
 test('blog contains a field named id', async () => {
-  const blogs = await api.get('/api/blogs') 
+  const blogs = await api.get('/api/blogs')
   expect(blogs.body[0].id).toBeDefined()
 })
 
 test('blogs can be added', async () => {
-  const blogsBefore = await api.get('/api/blogs')  
+  const blogsBefore = await api.get('/api/blogs')
   const newBlog = {
     title: "New blog",
     author: "Niklas M",
     url: "http://www.blog.com",
-    likes: 9000 
+    likes: 9000
   }
 
   await api.post('/api/blogs')
-    .send(newBlog) 
+    .send(newBlog)
 
-  const blogsAfter = await api.get('/api/blogs')   
+  const blogsAfter = await api.get('/api/blogs')
   expect(blogsAfter.body.length).toBe(blogsBefore.body.length + 1)
 
   const titles = blogsAfter.body.map(blog => blog.title)
   expect(titles).toContain('New blog')
+})
+
+test('blogs added without the field likes get 0 likes', async () => {
+  const newBlog = {
+    title: "Best blog",
+    author: "Niklas M",
+    url: "http://www.blog.com"
+  }
+
+  await api.post('/api/blogs')
+    .send(newBlog)
+
+  const blogsAfter = await api.get('/api/blogs')
+  const addedBlog = blogsAfter.body.find(blog => blog.title === 'Best blog')
+  expect(addedBlog.likes).toBe(0)
 })
 
 afterAll(() => {
