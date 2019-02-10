@@ -136,6 +136,22 @@ test('blogs cannot be added without url', async () => {
     .expect(400)
 })
 
+test('blogs can be deleted', async () => {
+  const blogsBefore = await api.get('/api/blogs') 
+  const id = blogsBefore.body[1].id
+
+  await api
+    .delete(`/api/blogs/${id}`)
+    .expect(204)
+    
+  const blogsAfter = await api.get('/api/blogs') 
+
+  expect(blogsAfter.body.length).toBe(blogsBefore.body.length - 1)
+
+  const ids = blogsAfter.body.map(blog => blog.id)
+  expect(ids).not.toContain(id)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
