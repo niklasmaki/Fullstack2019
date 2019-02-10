@@ -115,7 +115,8 @@ test('blogs added without likes get 0 likes', async () => {
 test('blogs cannot be added without title', async () => {
   const blogWithoutTitle = {
     author: "Niklas M",
-    url: "http://www.blog.com" 
+    url: "http://www.blog.com",
+    likes: 1
   }
 
   await api
@@ -127,7 +128,8 @@ test('blogs cannot be added without title', async () => {
 test('blogs cannot be added without url', async () => {
   const blogWithoutUrl = {
     title: "Best blog",
-    author: "Niklas M"
+    author: "Niklas M",
+    likes: 23
   }
 
   await api
@@ -150,6 +152,31 @@ test('blogs can be deleted', async () => {
 
   const ids = blogsAfter.body.map(blog => blog.id)
   expect(ids).not.toContain(id)
+
+})
+
+test('blogs can be updated', async () => {
+  const blogsBefore = await api.get('/api/blogs') 
+
+  const oldBlog = blogsBefore.body[2]
+  const changedBlog = {
+    title: oldBlog.title,
+    author: 'Niklas M',
+    url: oldBlog.url,
+    likes: 234
+  }
+
+  await api
+    .put(`/api/blogs/${oldBlog.id}`)
+    .send(changedBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+    
+  const blogsAfter = await api.get('/api/blogs') 
+  expect(blogsAfter.body.length).toBe(blogsBefore.body.length)
+
+  const updatedBlog = blogsAfter.body.find(blog => blog.id === oldBlog.id)
+  expect(updatedBlog).toMatchObject(changedBlog)
 })
 
 afterAll(() => {
