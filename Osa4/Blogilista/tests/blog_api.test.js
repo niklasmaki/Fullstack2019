@@ -85,7 +85,8 @@ test('blogs can be added', async () => {
     likes: 9000
   }
 
-  await api.post('/api/blogs')
+  await api
+    .post('/api/blogs')
     .send(newBlog)
 
   const blogsAfter = await api.get('/api/blogs')
@@ -95,19 +96,44 @@ test('blogs can be added', async () => {
   expect(titles).toContain('New blog')
 })
 
-test('blogs added without the field likes get 0 likes', async () => {
+test('blogs added without likes get 0 likes', async () => {
   const newBlog = {
     title: "Best blog",
     author: "Niklas M",
     url: "http://www.blog.com"
   }
 
-  await api.post('/api/blogs')
+  await api
+    .post('/api/blogs')
     .send(newBlog)
 
   const blogsAfter = await api.get('/api/blogs')
   const addedBlog = blogsAfter.body.find(blog => blog.title === 'Best blog')
   expect(addedBlog.likes).toBe(0)
+})
+
+test('blogs cannot be added without title', async () => {
+  const blogWithoutTitle = {
+    author: "Niklas M",
+    url: "http://www.blog.com" 
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutTitle)
+    .expect(400)
+})
+
+test('blogs cannot be added without url', async () => {
+  const blogWithoutUrl = {
+    title: "Best blog",
+    author: "Niklas M"
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutUrl)
+    .expect(400)
 })
 
 afterAll(() => {
