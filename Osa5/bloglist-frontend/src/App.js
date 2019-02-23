@@ -87,6 +87,21 @@ const App = () => {
     }
   }
 
+  const likeBlog = blog => {
+    return async () => {
+      const likedBlog = {
+        ...blog,
+        likes: blog.likes + 1
+      }
+      await blogService.update(likedBlog)
+      
+      setBlogs(blogs.map(b => {
+        if (b.id !== blog.id) return b
+        return likedBlog
+      }))
+    }
+  }
+
   const notify = message => {
     setNotification(message)
     setTimeout(() => {
@@ -129,7 +144,7 @@ const App = () => {
         </button>
       </div>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLike={likeBlog(blog)} />
       )}
       <h2>Add a new blog</h2>
       <Togglable buttonLabel={'Add a new blog'}>
