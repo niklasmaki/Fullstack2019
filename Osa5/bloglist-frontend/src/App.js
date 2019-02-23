@@ -102,6 +102,10 @@ const App = () => {
     }
   }
 
+  const sortByLikes = (a, b) => {
+    return b.likes - a.likes
+  }
+
   const notify = message => {
     setNotification(message)
     setTimeout(() => {
@@ -143,7 +147,7 @@ const App = () => {
           Logout
         </button>
       </div>
-      {blogs.map(blog =>
+      {blogs.sort(sortByLikes).map(blog =>
         <Blog key={blog.id} blog={blog} handleLike={likeBlog(blog)} />
       )}
       <h2>Add a new blog</h2>
