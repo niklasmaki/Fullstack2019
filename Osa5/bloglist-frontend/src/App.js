@@ -6,6 +6,7 @@ import './App.css'
 import ErrorNotification from './components/ErrorNotification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm';
+import Togglable from './components/Togglable';
 
 const Notification = ({ message }) => {
   if (!message) return null
@@ -131,15 +132,17 @@ const App = () => {
         <Blog key={blog.id} blog={blog} />
       )}
       <h2>Add a new blog</h2>
-      <BlogForm
-        title={title}
-        author={author}
-        url={url}
-        handleTitleChange={({ target }) => setTitle(target.value)}
-        handleAuthorChange={({ target }) => setAuthor(target.value)}
-        handleUrlChange={({ target }) => setUrl(target.value)}
-        handleNewBlog={handleNewBlog}
-      />
+      <Togglable buttonLabel={'Add a new blog'}>
+        <BlogForm
+          title={title}
+          author={author}
+          url={url}
+          handleTitleChange={({ target }) => setTitle(target.value)}
+          handleAuthorChange={({ target }) => setAuthor(target.value)}
+          handleUrlChange={({ target }) => setUrl(target.value)}
+          handleNewBlog={handleNewBlog}
+        />
+      </Togglable>
     </div>
   )
 }
