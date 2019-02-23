@@ -2,6 +2,27 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './App.css'
+
+const Notification = ({ message }) => {
+  if (!message) return null
+
+  return (
+    <div className="notification">
+      {message}
+    </div>
+  )
+}
+
+const ErrorNotification = ({ message }) => {
+  if (!message) return null
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +32,8 @@ const App = () => {
   const [title, setTitle] = useState("")
   const [author, setAuthor] = useState("")
   const [url, setUrl] = useState("")
+  const [notification, setNotification] = useState("")
+  const [error, setError] = useState("")
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,7 +64,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      console.error(exception.message)
+      notifyError("Wrong username or password")
     }
   }
 
@@ -52,21 +75,41 @@ const App = () => {
 
   const handleNewBlog = async event => {
     event.preventDefault()
-    const newBlog = await blogService.create({
-      title,
-      author,
-      url
-    })
-    setTitle('')
-    setAuthor('')
-    setUrl('')
-    setBlogs(blogs.concat(newBlog))
+    try {
+      const newBlog = await blogService.create({
+        title,
+        author,
+        url
+      })
+      notify(`A new blog ${title} by ${author} added`)
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      setBlogs(blogs.concat(newBlog))
+    } catch (exception) {
+      notifyError("The blog couldn't be added")
+    }
+  }
+
+  const notify = message => {
+    setNotification(message)
+    setTimeout(() => {
+      setNotification('')
+    }, 5000)
+  }
+
+  const notifyError = message => {
+    setError(message)
+    setTimeout(() => {
+      setError('')
+    }, 5000)
   }
 
   if (user === null) {
     return (
       <div>
         <h2>Log in to the application</h2>
+        <ErrorNotification message={error} />
         <form onSubmit={handleLogin}>
           <div>
             Username:
@@ -98,6 +141,8 @@ const App = () => {
   return (
     <div>
       <h2>Blogs</h2>
+      <Notification message={notification} />
+      <ErrorNotification message={error} />
       <p>{user.name} logged in</p>
       <div>
         <button onClick={handleLogout}>
