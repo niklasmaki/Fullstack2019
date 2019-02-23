@@ -3,6 +3,9 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+import ErrorNotification from './components/ErrorNotification'
+import LoginForm from './components/LoginForm'
+import BlogForm from './components/BlogForm';
 
 const Notification = ({ message }) => {
   if (!message) return null
@@ -14,15 +17,7 @@ const Notification = ({ message }) => {
   )
 }
 
-const ErrorNotification = ({ message }) => {
-  if (!message) return null
 
-  return (
-    <div className="error">
-      {message}
-    </div>
-  )
-}
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -110,30 +105,13 @@ const App = () => {
       <div>
         <h2>Log in to the application</h2>
         <ErrorNotification message={error} />
-        <form onSubmit={handleLogin}>
-          <div>
-            Username:
-            <input
-              type="text"
-              value={username}
-              name="Username"
-              onChange={({ target }) => setUsername(target.value)}
-            />
-          </div>
-          <div>
-            Password:
-            <input
-              type="password"
-              value={password}
-              name="Password"
-              onChange={({ target }) => setPassword(target.value)}
-            />
-          </div>
-          <button
-            type="submit">
-            Log in
-          </button>
-        </form>
+        <LoginForm
+          username={username}
+          password={password}
+          handleUsernameChange={({ target }) => setUsername(target.value)}
+          handlePasswordChange={({ target }) => setPassword(target.value)}
+          handleLogin={handleLogin}
+        />
       </div>
     )
   }
@@ -153,38 +131,15 @@ const App = () => {
         <Blog key={blog.id} blog={blog} />
       )}
       <h2>Add a new blog</h2>
-      <form onSubmit={handleNewBlog}>
-        <div>
-          Title:
-          <input
-            type="text"
-            value={title}
-            name="Title"
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          Author:
-          <input
-            type="text"
-            value={author}
-            name="Author"
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          URL:
-          <input
-            type="text"
-            value={url}
-            name="URL"
-            onChange={({ target }) => setUrl(target.value)}
-          />
-        </div>
-        <button>
-          Add
-        </button>
-      </form>
+      <BlogForm
+        title={title}
+        author={author}
+        url={url}
+        handleTitleChange={({ target }) => setTitle(target.value)}
+        handleAuthorChange={({ target }) => setAuthor(target.value)}
+        handleUrlChange={({ target }) => setUrl(target.value)}
+        handleNewBlog={handleNewBlog}
+      />
     </div>
   )
 }
