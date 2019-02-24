@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const Blog = ({ blog, handleLike, handleRemove }) => {
+const Blog = ({ blog, handleLike, handleRemove, loggedInUser }) => {
 
   const [showInfo, setShowInfo] = useState(false)
 
@@ -10,6 +10,10 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const removeButtonStyle = {
+    display: loggedInUser.username === blog.user.username ? '' : 'none'
   }
 
   const toggleInfo = () => {
@@ -32,7 +36,7 @@ const Blog = ({ blog, handleLike, handleRemove }) => {
         <div>
           Added by {blog.user.name}
         </div>
-        <div>
+        <div style={removeButtonStyle}>
           <button onClick={handleRemove}>Remove</button>
         </div>
       </div>

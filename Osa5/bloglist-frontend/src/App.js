@@ -87,7 +87,7 @@ const App = () => {
     }
   }
 
-  const handleRemoveBlog = blog => {
+  const removeBlog = blog => {
     return async () => {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
         try {
@@ -100,7 +100,6 @@ const App = () => {
         }
       }
     }
-
   }
 
   const likeBlog = blog => {
@@ -110,7 +109,6 @@ const App = () => {
         likes: blog.likes + 1
       }
       await blogService.update(likedBlog)
-
       setBlogs(blogs.map(b => {
         if (b.id !== blog.id) return b
         return likedBlog
@@ -168,7 +166,8 @@ const App = () => {
           key={blog.id}
           blog={blog}
           handleLike={likeBlog(blog)}
-          handleRemove={handleRemoveBlog(blog)}
+          handleRemove={removeBlog(blog)}
+          loggedInUser={user}
         />
       )}
       <h2>Add a new blog</h2>
