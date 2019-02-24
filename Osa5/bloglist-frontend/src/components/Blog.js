@@ -24,7 +24,7 @@ const Blog = ({ blog, handleLike, handleRemove, loggedInUser }) => {
     return (
       <div style={blogStyle}>
         <div onClick={toggleInfo}>
-        {blog.title} {blog.author}
+          {blog.title} {blog.author}
         </div>
         <div>
           {blog.url}

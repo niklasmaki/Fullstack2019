@@ -5,31 +5,29 @@ import loginService from './services/login'
 import './App.css'
 import ErrorNotification from './components/ErrorNotification'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm';
-import Togglable from './components/Togglable';
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 
 const Notification = ({ message }) => {
   if (!message) return null
 
   return (
-    <div className="notification">
+    <div className='notification'>
       {message}
     </div>
   )
 }
 
-
-
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState("")
-  const [author, setAuthor] = useState("")
-  const [url, setUrl] = useState("")
-  const [notification, setNotification] = useState("")
-  const [error, setError] = useState("")
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+  const [notification, setNotification] = useState('')
+  const [error, setError] = useState('')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -60,11 +58,11 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      notifyError("Wrong username or password")
+      notifyError('Wrong username or password')
     }
   }
 
-  const handleLogout = async event => {
+  const handleLogout = async () => {
     window.localStorage.removeItem('loggedInUser')
     setUser(null)
   }
@@ -83,7 +81,7 @@ const App = () => {
       setUrl('')
       setBlogs(blogs.concat(newBlog))
     } catch (exception) {
-      notifyError("The blog couldn't be added")
+      notifyError('The blog couldn\'t be added')
     }
   }
 
@@ -96,7 +94,7 @@ const App = () => {
             return b.id !== blog.id
           }))
         } catch (exception) {
-          notifyError("The blog couldn't be removed")
+          notifyError('The blog couldn\'t be removed')
         }
       }
     }

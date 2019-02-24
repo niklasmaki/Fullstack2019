@@ -7,7 +7,7 @@ const LoginForm = ({
   password,
   handlePasswordChange,
   handleLogin
-  }) => (
+}) => (
   <div>
     <form onSubmit={handleLogin}>
       <div>
