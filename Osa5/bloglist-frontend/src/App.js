@@ -7,6 +7,7 @@ import ErrorNotification from './components/ErrorNotification'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import useField from './hooks/index'
 
 const Notification = ({ message }) => {
   if (!message) return null
@@ -20,8 +21,8 @@ const Notification = ({ message }) => {
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const username = useField('text')
+  const password = useField('password')
   const [user, setUser] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -48,15 +49,15 @@ const App = () => {
     event.preventDefault()
     try {
       const user = await loginService.login({
-        username, password
+        username: username.value, password: password.value
       })
 
       window.localStorage.setItem('loggedInUser', JSON.stringify(user))
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername('')
-      setPassword('')
+      // setUsername('')
+      // setPassword('')
     } catch (exception) {
       notifyError('Wrong username or password')
     }
@@ -138,10 +139,10 @@ const App = () => {
         <h2>Log in to the application</h2>
         <ErrorNotification message={error} />
         <LoginForm
-          username={username}
-          password={password}
-          handleUsernameChange={({ target }) => setUsername(target.value)}
-          handlePasswordChange={({ target }) => setPassword(target.value)}
+          username={username.value}
+          password={password.value}
+          handleUsernameChange={username.onChange}
+          handlePasswordChange={password.onChange}
           handleLogin={handleLogin}
         />
       </div>
