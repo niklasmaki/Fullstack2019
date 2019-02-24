@@ -87,6 +87,22 @@ const App = () => {
     }
   }
 
+  const handleRemoveBlog = blog => {
+    return async () => {
+      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+        try {
+          await blogService.remove(blog.id)
+          setBlogs(blogs.filter(b => {
+            return b.id !== blog.id
+          }))
+        } catch (exception) {
+          notifyError("The blog couldn't be removed")
+        }
+      }
+    }
+
+  }
+
   const likeBlog = blog => {
     return async () => {
       const likedBlog = {
@@ -94,7 +110,7 @@ const App = () => {
         likes: blog.likes + 1
       }
       await blogService.update(likedBlog)
-      
+
       setBlogs(blogs.map(b => {
         if (b.id !== blog.id) return b
         return likedBlog
@@ -148,7 +164,12 @@ const App = () => {
         </button>
       </div>
       {blogs.sort(sortByLikes).map(blog =>
-        <Blog key={blog.id} blog={blog} handleLike={likeBlog(blog)} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleLike={likeBlog(blog)}
+          handleRemove={handleRemoveBlog(blog)}
+        />
       )}
       <h2>Add a new blog</h2>
       <Togglable buttonLabel={'Add a new blog'}>
