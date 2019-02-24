@@ -55,13 +55,14 @@ blogRouter.delete('/:id', async (request, response) => {
     if (blog.user.toString() !== decodedToken.id) {
       return response.status(401).json({ error: 'cannot delete blog of another user' })
     }
+
+    await Blog.findByIdAndDelete(request.params.id)
+    response.status(204).end()
   } catch (exception) {
     console.error(exception)
     response.status(400).send({ error: exception.message })
   }
 
-  await Blog.findByIdAndDelete(request.params.id)
-  response.status(204).end()
 })
 
 blogRouter.put('/:id', async (request, response) => {
