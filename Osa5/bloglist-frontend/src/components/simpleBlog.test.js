@@ -2,7 +2,7 @@ import React from 'react'
 import { render, fireEvent } from 'react-testing-library'
 import SimpleBlog from './SimpleBlog'
 
-test('renders content', async () => {
+test('renders content', () => {
   const blog = {
     title: 'Best blog',
     author: 'Niklas M',
