@@ -24,9 +24,9 @@ const App = () => {
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
   const [notification, setNotification] = useState('')
   const [error, setError] = useState('')
 
@@ -56,8 +56,8 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      // setUsername('')
-      // setPassword('')
+      username.reset()
+      password.reset()
     } catch (exception) {
       notifyError('Wrong username or password')
     }
@@ -72,14 +72,14 @@ const App = () => {
     event.preventDefault()
     try {
       const newBlog = await blogService.create({
-        title,
-        author,
-        url
+        title: title.value,
+        author: author.value,
+        url: url.value
       })
-      notify(`A new blog ${title} by ${author} added`)
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      notify(`A new blog ${title.value} by ${author.value} added`)
+      title.reset()
+      author.reset()
+      url.reset()
       setBlogs(blogs.concat(newBlog))
     } catch (exception) {
       notifyError('The blog couldn\'t be added')
@@ -139,10 +139,8 @@ const App = () => {
         <h2>Log in to the application</h2>
         <ErrorNotification message={error} />
         <LoginForm
-          username={username.value}
-          password={password.value}
-          handleUsernameChange={username.onChange}
-          handlePasswordChange={password.onChange}
+          username={username}
+          password={password}
           handleLogin={handleLogin}
         />
       </div>
@@ -175,9 +173,6 @@ const App = () => {
           title={title}
           author={author}
           url={url}
-          handleTitleChange={({ target }) => setTitle(target.value)}
-          handleAuthorChange={({ target }) => setAuthor(target.value)}
-          handleUrlChange={({ target }) => setUrl(target.value)}
           handleNewBlog={handleNewBlog}
         />
       </Togglable>
