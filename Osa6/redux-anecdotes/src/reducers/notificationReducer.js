@@ -7,10 +7,18 @@ export const showNotification = message => {
   }
 }
 
-const reducer = (state = 'test', action) => {
-  switch(action) {
+export const hideNotification = () => {
+  return {
+    type: 'NOTIFICATION_HIDE'
+  }
+}
+
+const reducer = (state = '', action) => {
+  switch(action.type) {
     case 'NOTIFICATION_SHOW':
       return action.notification
+    case 'NOTIFICATION_HIDE':
+      return ''
     default:
       return state
   }
