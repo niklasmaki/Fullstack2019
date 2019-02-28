@@ -4,6 +4,7 @@ import { showNotification, hideNotification } from '../reducers/notificationRedu
 
 const AnecdoteList = props => {
   const anecdotes = props.store.getState().anecdotes
+  const filter = props.store.getState().filter
 
   const vote = (id) => {
     console.log('vote', id)
@@ -11,7 +12,7 @@ const AnecdoteList = props => {
     props.store.dispatch(voteAnecdote(id))
     props.store.dispatch(showNotification(`You voted '${anecdote.content}'`))
     setTimeout(() => {
-      props.store.dispatch(hideNotification()) 
+      props.store.dispatch(hideNotification())
     }, 5000)
   }
 
@@ -19,23 +20,22 @@ const AnecdoteList = props => {
     return b.votes - a.votes
   }
 
-  const getSortedAnecdotes = () => {
-    return [...anecdotes].sort(sortByVotes)
-  }
-
   return (
     <div>
-      {getSortedAnecdotes().map(anecdote =>
-        <div key={anecdote.id}>
-          <div>
-            {anecdote.content}
+      {anecdotes
+        .filter(anecdote => anecdote.content.includes(filter))
+        .sort(sortByVotes)
+        .map(anecdote =>
+          <div key={anecdote.id}>
+            <div>
+              {anecdote.content}
+            </div>
+            <div>
+              has {anecdote.votes}
+              <button onClick={() => vote(anecdote.id)}>vote</button>
+            </div>
           </div>
-          <div>
-            has {anecdote.votes}
-            <button onClick={() => vote(anecdote.id)}>vote</button>
-          </div>
-        </div>
-      )}
+        )}
     </div>
   )
 }
