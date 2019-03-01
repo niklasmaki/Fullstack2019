@@ -10,10 +10,10 @@ const AnecdoteList = props => {
   const vote = (id) => {
     console.log('vote', id)
     const anecdote = anecdotes.find(anecdote => anecdote.id === id)
-    props.store.dispatch(voteAnecdote(id))
-    props.store.dispatch(showNotification(`You voted '${anecdote.content}'`))
+    props.voteAnecdote(id)
+    props.showNotification(`You voted '${anecdote.content}'`)
     setTimeout(() => {
-      props.store.dispatch(hideNotification())
+      props.hideNotification()
     }, 5000)
   }
 
@@ -49,5 +49,6 @@ const mapStateToProps = state => {
 }
 
 export default connect(
-  mapStateToProps
+  mapStateToProps,
+  { voteAnecdote, showNotification, hideNotification }
 )(AnecdoteList)
