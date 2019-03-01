@@ -5,10 +5,8 @@ import { showNotification, hideNotification } from '../reducers/notificationRedu
 
 const AnecdoteList = props => {
   const anecdotes = props.anecdotes
-  const filter = props.filter
 
   const vote = (id) => {
-    console.log('vote', id)
     const anecdote = anecdotes.find(anecdote => anecdote.id === id)
     props.voteAnecdote(id)
     props.showNotification(`You voted '${anecdote.content}'`)
@@ -17,15 +15,9 @@ const AnecdoteList = props => {
     }, 5000)
   }
 
-  const sortByVotes = (a, b) => {
-    return b.votes - a.votes
-  }
-
   return (
     <div>
       {anecdotes
-        .filter(anecdote => anecdote.content.includes(filter))
-        .sort(sortByVotes)
         .map(anecdote =>
           <div key={anecdote.id}>
             <div>
@@ -41,10 +33,19 @@ const AnecdoteList = props => {
   )
 }
 
+const sortByVotes = (a, b) => {
+  return b.votes - a.votes
+}
+
+const getAnecdotes = state => {
+  return state.anecdotes
+    .filter(anecdote => anecdote.content.includes(state.filter))
+    .sort(sortByVotes)
+}
+
 const mapStateToProps = state => {
   return {
-    anecdotes: state.anecdotes,
-    filter: state.filter
+    anecdotes: getAnecdotes(state)
   }
 }
 
