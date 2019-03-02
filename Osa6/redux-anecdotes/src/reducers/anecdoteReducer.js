@@ -1,15 +1,5 @@
 import anecdoteService from '../services/anecdotes'
 
-const getId = () => (100000 * Math.random()).toFixed(0)
-
-const asObject = (anecdote) => {
-  return {
-    content: anecdote,
-    id: getId(),
-    votes: 0
-  }
-}
-
 const reducer = (state = [], action) => {
   switch (action.type) {
     case 'ANECDOTE_VOTE':
@@ -23,7 +13,7 @@ const reducer = (state = [], action) => {
         return anecdote
       })
     case 'ANECDOTE_ADD':
-      return state.concat(asObject(action.data.content))
+      return state.concat(action.data)
     case 'ANECDOTE_INIT':
       return action.data
     default:
@@ -31,7 +21,7 @@ const reducer = (state = [], action) => {
   }
 }
 
-export const initAnecdotes = anecdotes => {
+export const initAnecdotes = () => {
   return async dispatch => {
     const anecdotes = await anecdoteService.getAll()
     dispatch({
@@ -42,11 +32,14 @@ export const initAnecdotes = anecdotes => {
 }
 
 export const voteAnecdote = id => {
-  return {
-    type: "ANECDOTE_VOTE",
-    data: {
-      id
-    }
+  return async dispatch => {
+    await anecdoteService.vote(id)
+    dispatch({
+      type: "ANECDOTE_VOTE",
+      data: {
+        id
+      }
+    })
   }
 }
 
