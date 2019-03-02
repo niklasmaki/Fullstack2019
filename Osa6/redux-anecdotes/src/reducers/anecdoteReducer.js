@@ -11,7 +11,7 @@ const asObject = (anecdote) => {
 }
 
 const reducer = (state = [], action) => {
-  switch(action.type) {
+  switch (action.type) {
     case 'ANECDOTE_VOTE':
       return state.map(anecdote => {
         if (anecdote.id === action.data.id) {
@@ -51,11 +51,12 @@ export const voteAnecdote = id => {
 }
 
 export const addAnecdote = content => {
-  return {
-    type: "ANECDOTE_ADD",
-    data: {
-      content
-    }
+  return async dispatch => {
+    const newAnecdote = await anecdoteService.create(content)
+    dispatch({
+      type: "ANECDOTE_ADD",
+      data: newAnecdote
+    })
   }
 }
 
