@@ -9,9 +9,9 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 import useField from './hooks/index'
 import { setNotification } from './reducers/notificationReducer'
+import { initBlogs, likeBlog, addBlog, removeBlog } from './reducers/blogReducer'
 
 const App = props => {
-  const [blogs, setBlogs] = useState([])
   const username = useField('text')
   const password = useField('password')
   const [user, setUser] = useState(null)
@@ -20,9 +20,7 @@ const App = props => {
   const url = useField('text')
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs)
-    )
+    props.initBlogs()
   }, [])
 
   useEffect(() => {
@@ -60,30 +58,27 @@ const App = props => {
   const handleNewBlog = async event => {
     event.preventDefault()
     try {
-      const newBlog = await blogService.create({
+      const newBlog = {
         title: title.value,
         author: author.value,
         url: url.value
-      })
+      }
       props.setNotification(
         `A new blog ${title.value} by ${author.value} added`, 5, 'success')
       title.reset()
       author.reset()
       url.reset()
-      setBlogs(blogs.concat(newBlog))
+      props.addBlog(newBlog)
     } catch (exception) {
       props.setNotification('The blog couldn\'t be added', 5, 'error')
     }
   }
 
-  const removeBlog = blog => {
-    return async () => {
+  const handleRemoveBlog = blog => {
+    return () => {
       if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
         try {
-          await blogService.remove(blog.id)
-          setBlogs(blogs.filter(b => {
-            return b.id !== blog.id
-          }))
+          props.removeBlog(blog.id)
         } catch (exception) {
           props.setNotification('The blog couldn\'t be removed', 5, 'error')
         }
@@ -91,17 +86,9 @@ const App = props => {
     }
   }
 
-  const likeBlog = blog => {
-    return async () => {
-      const likedBlog = {
-        ...blog,
-        likes: blog.likes + 1
-      }
-      await blogService.update(likedBlog)
-      setBlogs(blogs.map(b => {
-        if (b.id !== blog.id) return b
-        return likedBlog
-      }))
+  const handleLikeBlog = blog => {
+    return () => {
+      props.likeBlog(blog)
     }
   }
 
@@ -133,12 +120,12 @@ const App = props => {
           Logout
         </button>
       </div>
-      {blogs.sort(sortByLikes).map(blog =>
+      {props.blogs.sort(sortByLikes).map(blog =>
         <Blog
           key={blog.id}
           blog={blog}
-          handleLike={likeBlog(blog)}
-          handleRemove={removeBlog(blog)}
+          handleLike={handleLikeBlog(blog)}
+          handleRemove={handleRemoveBlog(blog)}
           loggedInUser={user}
         />
       )}
@@ -157,11 +144,12 @@ const App = props => {
 
 const mapStateToProps = state => {
   return {
+    blogs: state.blogs,
     notification: state.notification
   }
 }
 
 export default connect(
   mapStateToProps,
-  { setNotification }
+  { setNotification, initBlogs, likeBlog, addBlog, removeBlog }
 )(App)
