@@ -12,6 +12,7 @@ import {
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
+import BlogInfo from './components/BlogInfo';
 
 const App = props => {
   const username = useField('text')
@@ -64,6 +65,7 @@ const App = props => {
           <Route exact path='/' render={() => <BlogList />} />
           <Route exact path='/users' render={() => <UserList />} />
           <Route path='/users/:id' component={User} />
+          <Route path='/blogs/:id' component={BlogInfo} />
         </div>
       </Router>
     </div >

@@ -44,10 +44,11 @@ export const likeBlog = blog => {
   }
 }
 
-export const addBlog = (content, handleSuccess, handleError) => {
+export const addBlog = (content, user, handleSuccess, handleError) => {
   return async dispatch => {
     try {
       const newBlog = await blogService.create(content)
+      newBlog.user = user
       dispatch({
         type: 'BLOG_ADD',
         data: newBlog
@@ -59,10 +60,11 @@ export const addBlog = (content, handleSuccess, handleError) => {
   }
 }
 
-export const removeBlog = (id, handleError) => {
+export const removeBlog = (id, handleSuccess, handleError) => {
   return async dispatch => {
     try {
       await blogService.remove(id)
+      handleSuccess()
       dispatch({
         type: 'BLOG_REMOVE',
         data: {

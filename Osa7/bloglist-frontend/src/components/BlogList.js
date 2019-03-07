@@ -14,7 +14,6 @@ const BlogList = props => {
 
   useEffect(() => {
     props.initBlogs()
-    console.log('init done')
   }, [])
 
   const handleNewBlog = async event => {
@@ -31,29 +30,12 @@ const BlogList = props => {
     const handleError = () => {
       props.setNotification('The blog couldn\'t be added', 5, 'error')
     }
-    props.addBlog(newBlog, handleSuccess, handleError)
+    props.addBlog(newBlog, props.user, handleSuccess, handleError)
 
     title.reset()
     author.reset()
     url.reset()
 
-  }
-
-  const handleRemoveBlog = blog => {
-    return () => {
-      if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-        const handleError = () => {
-          props.setNotification('The blog couldn\'t be removed', 5, 'error')
-        }
-        props.removeBlog(blog.id, handleError)
-      }
-    }
-  }
-
-  const handleLikeBlog = blog => {
-    return () => {
-      props.likeBlog(blog)
-    }
   }
 
   const sortByLikes = (a, b) => {
@@ -66,9 +48,6 @@ const BlogList = props => {
         <Blog
           key={blog.id}
           blog={blog}
-          handleLike={handleLikeBlog(blog)}
-          handleRemove={handleRemoveBlog(blog)}
-          loggedInUser={props.user}
         />
       )}
       <h2> Add a new blog</h2>

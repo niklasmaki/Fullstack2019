@@ -1,8 +1,7 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ blog, handleLike, handleRemove, loggedInUser }) => {
-
-  const [showInfo, setShowInfo] = useState(false)
+const Blog = ({ blog }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -12,40 +11,14 @@ const Blog = ({ blog, handleLike, handleRemove, loggedInUser }) => {
     marginBottom: 5
   }
 
-  const removeButtonStyle = {
-    display: loggedInUser.username === blog.user.username ? '' : 'none'
-  }
-
-  const toggleInfo = () => {
-    setShowInfo(!showInfo)
-  }
-
-  if (showInfo) {
-    return (
-      <div style={blogStyle}>
-        <div onClick={toggleInfo}>
-          {blog.title} {blog.author}
-        </div>
-        <div>
-          {blog.url}
-        </div>
-        <div>
-          {blog.likes} likes
-          <button onClick={handleLike}>Like</button>
-        </div>
-        <div>
-          Added by {blog.user.name}
-        </div>
-        <div style={removeButtonStyle}>
-          <button onClick={handleRemove}>Remove</button>
-        </div>
-      </div>
-    )
-  }
-
   return (
-    <div onClick={toggleInfo}  style={blogStyle} className='title'>
-      {blog.title} {blog.author}
+    <div style={blogStyle} className='title'>
+      <Link to={{
+        pathname: `/blogs/${blog.id}`,
+        state: { id: blog.id }
+      }}>
+        {blog.title} {blog.author}
+      </Link>
     </div>
   )
 }
