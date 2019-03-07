@@ -44,25 +44,34 @@ export const likeBlog = blog => {
   }
 }
 
-export const addBlog = content => {
+export const addBlog = (content, handleSuccess, handleError) => {
   return async dispatch => {
-    const newBlog = await blogService.create(content)
-    dispatch({
-      type: 'BLOG_ADD',
-      data: newBlog
-    })
+    try {
+      const newBlog = await blogService.create(content)
+      dispatch({
+        type: 'BLOG_ADD',
+        data: newBlog
+      })
+      handleSuccess()
+    } catch (exception) {
+      handleError()
+    }
   }
 }
 
-export const removeBlog = id => {
+export const removeBlog = (id, handleError) => {
   return async dispatch => {
-    await blogService.remove(id)
-    dispatch({
-      type: 'BLOG_REMOVE',
-      data: {
-        id
-      }
-    })
+    try {
+      await blogService.remove(id)
+      dispatch({
+        type: 'BLOG_REMOVE',
+        data: {
+          id
+        }
+      })
+    } catch (exception) {
+      handleError()
+    }
   }
 }
 
