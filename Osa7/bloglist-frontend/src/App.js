@@ -7,10 +7,11 @@ import { setNotification } from './reducers/notificationReducer'
 import { loginUser, logoutUser, initUser } from './reducers/userReducer'
 import {
   BrowserRouter as Router,
-  Route, Link, Redirect, withRouter
+  Route
 } from 'react-router-dom'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
+import User from './components/User'
 
 const App = props => {
   const username = useField('text')
@@ -61,7 +62,8 @@ const App = props => {
       <Router>
         <div>
           <Route exact path='/' render={() => <BlogList />} />
-          <Route path='/users' render={() => <UserList />} />
+          <Route exact path='/users' render={() => <UserList />} />
+          <Route path='/users/:id' component={User} />
         </div>
       </Router>
     </div >
