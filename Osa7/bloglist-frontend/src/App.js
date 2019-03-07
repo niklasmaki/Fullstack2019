@@ -7,12 +7,13 @@ import { setNotification } from './reducers/notificationReducer'
 import { loginUser, logoutUser, initUser } from './reducers/userReducer'
 import {
   BrowserRouter as Router,
-  Route
+  Route,
+  Link
 } from 'react-router-dom'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
-import BlogInfo from './components/BlogInfo';
+import BlogInfo from './components/BlogInfo'
 
 const App = props => {
   const username = useField('text')
@@ -51,24 +52,25 @@ const App = props => {
   }
 
   return (
-    <div>
-      <h2>Blogs</h2>
-      <Notification notification={props.notification} />
-      <p>{props.user.name} logged in</p>
+    <Router>
       <div>
-        <button onClick={props.logoutUser}>
-          Logout
-        </button>
-      </div>
-      <Router>
-        <div>
-          <Route exact path='/' render={() => <BlogList />} />
-          <Route exact path='/users' render={() => <UserList />} />
-          <Route path='/users/:id' component={User} />
-          <Route path='/blogs/:id' component={BlogInfo} />
+        <div style={{ background: 'lightgrey' }}>
+          <Link to='/blogs' style={{ margin: 5 }}>blogs</Link>
+          <Link to='/users' style={{ margin: 5 }}>users</Link>
+          {props.user.name} logged in
+          <button onClick={props.logoutUser} style={{ margin: 5 }}>
+              Logout
+          </button>
         </div>
-      </Router>
-    </div >
+        <h2>Blogs</h2>
+        <Notification notification={props.notification} />
+        <Route exact path='/' render={() => <BlogList />} />
+        <Route exact path='/blogs' render={() => <BlogList />} />
+        <Route exact path='/users' render={() => <UserList />} />
+        <Route path='/users/:id' component={User} />
+        <Route path='/blogs/:id' component={BlogInfo} />
+      </div>
+    </Router>
   )
 }
 
