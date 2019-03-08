@@ -34,7 +34,7 @@ const BlogInfo = props => {
 
   return (
     <div>
-      <h2>{blog.name} {blog.author}</h2>
+      <h2>{blog.title} {blog.author}</h2>
       <div>
         <a href={blog.url}>{blog.url}</a>
       </div>

@@ -58,7 +58,7 @@ const BlogList = props => {
         </tbody>
       </Table>
       <h2> Add a new blog</h2>
-      <Togglable buttonLabel={'Add a new blog'}>
+      <Togglable buttonId='toggleBlogForm' buttonLabel={'Add a new blog'}>
         <BlogForm
           title={title}
           author={author}

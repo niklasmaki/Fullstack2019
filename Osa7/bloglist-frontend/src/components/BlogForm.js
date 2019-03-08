@@ -16,12 +16,12 @@ const BlogForm = props => {
       <Form.Group>
         <Form.Label>Title:</Form.Label>
 
-        <Form.Control {...title} />
+        <Form.Control id='title' {...title} />
         <Form.Label>Author:</Form.Label>
-        <Form.Control {...author} />
+        <Form.Control id='author' {...author} />
         <Form.Label>URL:</Form.Label>
-        <Form.Control {...url} />
-        <Button variant="primary" type="submit"
+        <Form.Control id='url' {...url} />
+        <Button variant="primary" type="submit" id='addBlog'
           style={{ marginTop: '10px' }}>
           Add
         </Button>
