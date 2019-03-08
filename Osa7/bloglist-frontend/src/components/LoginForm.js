@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Form, Button } from 'react-bootstrap'
 
 const getFieldWithoutReset = field => {
   const { reset, ...result } = field
@@ -12,20 +13,18 @@ const LoginForm = props => {
 
   return (
     <div>
-      <form onSubmit={props.handleLogin}>
-        <div>
-          Username:
-          <input {...username} />
-        </div>
-        <div>
-          Password:
-          <input {...password} />
-        </div>
-        <button
-          type="submit">
-          Log in
-        </button>
-      </form>
+      <Form onSubmit={props.handleLogin}>
+        <Form.Group>
+          <Form.Label>Username:</Form.Label>
+          <Form.Control {...username} />
+          <Form.Label>Password :</Form.Label>
+          <Form.Control {...password} />
+          <Button variant="primary" type="submit"
+            style={{ marginTop: '10px' }}>
+            Log in
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   )
 }

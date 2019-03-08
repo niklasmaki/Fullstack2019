@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Form, Button } from 'react-bootstrap'
 
 const getFieldWithoutReset = field => {
   const { reset, ...result } = field
@@ -10,25 +11,22 @@ const BlogForm = props => {
   const title = getFieldWithoutReset(props.title)
   const author = getFieldWithoutReset(props.author)
   const url = getFieldWithoutReset(props.url)
-
   return (
-    <form onSubmit={props.handleNewBlog}>
-      <div>
-        Title:
-        <input {...title} />
-      </div>
-      <div>
-        Author:
-        <input {...author} />
-      </div>
-      <div>
-        URL:
-        <input {...url} />
-      </div>
-      <button>
-        Add
-      </button>
-    </form>
+    <Form onSubmit={props.handleNewBlog}>
+      <Form.Group>
+        <Form.Label>Title:</Form.Label>
+
+        <Form.Control {...title} />
+        <Form.Label>Author:</Form.Label>
+        <Form.Control {...author} />
+        <Form.Label>URL:</Form.Label>
+        <Form.Control {...url} />
+        <Button variant="primary" type="submit"
+          style={{ marginTop: '10px' }}>
+          Add
+        </Button>
+      </Form.Group>
+    </Form>
   )
 }
 

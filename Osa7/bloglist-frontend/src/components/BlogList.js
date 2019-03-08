@@ -6,6 +6,7 @@ import Blog from './Blog'
 import useField from '../hooks/index'
 import { setNotification } from '../reducers/notificationReducer'
 import { likeBlog, addBlog, removeBlog, initBlogs } from '../reducers/blogReducer'
+import { Table } from 'react-bootstrap'
 
 const BlogList = props => {
   const title = useField('text')
@@ -44,12 +45,18 @@ const BlogList = props => {
 
   return (
     <div>
-      {props.blogs.sort(sortByLikes).map(blog =>
-        <Blog
-          key={blog.id}
-          blog={blog}
-        />
-      )}
+      <h2>Blogs</h2>
+      <Table>
+        <tbody>
+          {props.blogs.sort(sortByLikes).map(blog =>
+            <tr key={blog.id}>
+              <Blog
+                blog={blog}
+              />
+            </tr>
+          )}
+        </tbody>
+      </Table>
       <h2> Add a new blog</h2>
       <Togglable buttonLabel={'Add a new blog'}>
         <BlogForm

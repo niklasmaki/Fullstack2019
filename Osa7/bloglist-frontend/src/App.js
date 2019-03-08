@@ -14,6 +14,7 @@ import BlogList from './components/BlogList'
 import UserList from './components/UserList'
 import User from './components/User'
 import BlogInfo from './components/BlogInfo'
+import { Nav, Navbar, Button } from 'react-bootstrap'
 
 const App = props => {
   const username = useField('text')
@@ -39,7 +40,7 @@ const App = props => {
 
   if (!props.user) {
     return (
-      <div>
+      <div className='container'>
         <h2>Log in to the application</h2>
         <Notification notification={props.notification} />
         <LoginForm
@@ -53,16 +54,30 @@ const App = props => {
 
   return (
     <Router>
-      <div>
-        <div style={{ background: 'lightgrey' }}>
-          <Link to='/blogs' style={{ margin: 5 }}>blogs</Link>
-          <Link to='/users' style={{ margin: 5 }}>users</Link>
-          {props.user.name} logged in
-          <button onClick={props.logoutUser} style={{ margin: 5 }}>
-              Logout
-          </button>
-        </div>
-        <h2>Blogs</h2>
+      <div className='container'>
+        <Navbar collapseOnSelect expand="lg" bg="dark" variant="dark">
+          <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+          <Navbar.Collapse id="responsive-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link href="#" as="span">
+                <Link to="/blogs">Blogs</Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <Link to="/users">Users</Link>
+              </Nav.Link>
+              <Nav.Link href="#" as="span">
+                <em>{props.user.name} logged in</em>
+
+              </Nav.Link>
+              <Nav.Link>
+                <Button variant='light' size='sm'
+                  onClick={props.logoutUser}>
+                  Logout
+                </Button>
+              </Nav.Link>
+            </Nav>
+          </Navbar.Collapse>
+        </Navbar>
         <Notification notification={props.notification} />
         <Route exact path='/' render={() => <BlogList />} />
         <Route exact path='/blogs' render={() => <BlogList />} />
