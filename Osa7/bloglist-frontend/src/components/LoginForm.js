@@ -16,10 +16,10 @@ const LoginForm = props => {
       <Form onSubmit={props.handleLogin}>
         <Form.Group>
           <Form.Label>Username:</Form.Label>
-          <Form.Control {...username} />
-          <Form.Label>Password :</Form.Label>
-          <Form.Control {...password} />
-          <Button variant="primary" type="submit"
+          <Form.Control id='username' {...username} />
+          <Form.Label>Password:</Form.Label>
+          <Form.Control id='password' {...password} />
+          <Button variant="primary" type="submit" id='loginButton'
             style={{ marginTop: '10px' }}>
             Log in
           </Button>
