@@ -206,7 +206,7 @@ const resolvers = {
           }
         })
       }
-      const author = await Author.findOne({name: args.author})
+      let author = await Author.findOne({name: args.author})
       console.log("found author: ")
       console.log(author)
 
