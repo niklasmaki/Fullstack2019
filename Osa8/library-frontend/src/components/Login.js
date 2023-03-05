@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { LOGIN } from '../queries'
+import { LOGIN, FAVOURITE_GENRE } from '../queries'
 
 const Login = ({ setToken, show }) => {
   const [username, setUsername] = useState('')
@@ -9,7 +9,8 @@ const Login = ({ setToken, show }) => {
   const [ login, result ] = useMutation(LOGIN, {
     onError: (error) => {
       //setError(error.graphQLErrors[0].message)
-    }
+    },
+    refetchQueries: [ { query: FAVOURITE_GENRE } ]  
   })
 
   useEffect(() => {

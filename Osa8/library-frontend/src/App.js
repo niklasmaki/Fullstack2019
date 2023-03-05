@@ -3,9 +3,10 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Login from './components/Login'
+import Recommendations from './components/Recommendations'
 
 import { useQuery, useApolloClient } from '@apollo/client'
-import { ALL_AUTHORS, ALL_BOOKS } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, FAVOURITE_GENRE } from './queries'
 
 const App = () => {
   const [page, setPage] = useState('authors')
@@ -15,8 +16,9 @@ const App = () => {
 
   const authorResult = useQuery(ALL_AUTHORS, { fetchPolicy: 'network-only' })
   const bookResult = useQuery(ALL_BOOKS)
+  const genreResult = useQuery(FAVOURITE_GENRE)
 
-  if (authorResult.loading || bookResult.loading)  {
+  if (authorResult.loading || bookResult.loading || genreResult.loading)  {
     return <div>loading...</div>
   }
 
@@ -32,6 +34,7 @@ const App = () => {
       <div>
         <button onClick={() => setPage('authors')}>authors</button>
         <button onClick={() => setPage('books')}>books</button>
+        {token ? <button onClick={() => setPage('recommendations')}>recommend</button> : null }
         {token ? <button onClick={() => setPage('add')}>add book</button> : null}
         {token ? <button onClick={logout}>logout</button>
           :<button onClick={() => setPage('login')}>login</button>}
@@ -42,6 +45,8 @@ const App = () => {
       <Books show={page === 'books'} books={bookResult.data.allBooks} />
 
       <NewBook show={page === 'add'} />
+      
+      <Recommendations show={page === 'recommendations'} books={bookResult.data.allBooks} genre={genreResult.data.me.favoriteGenre} />
 
       <Login show={page === 'login'} setToken={setToken} />
     </div>
