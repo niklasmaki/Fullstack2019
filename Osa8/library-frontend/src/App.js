@@ -8,19 +8,27 @@ import Recommendations from './components/Recommendations'
 import { useQuery, useApolloClient } from '@apollo/client'
 import { ALL_AUTHORS, ALL_BOOKS, FAVOURITE_GENRE } from './queries'
 
+const uniqueValues = (value, index, array) => {
+  return array.indexOf(value) === index
+}
+
 const App = () => {
   const [page, setPage] = useState('authors')
   const [token, setToken] = useState(null)
+  const [genre, setGenre] = useState('')
   const [_, forceUpdate] = useReducer((x) => x + 1, 0); // couldn't get the Authors component to rerender on mutation so I need to force it...
   const client = useApolloClient()
 
   const authorResult = useQuery(ALL_AUTHORS, { fetchPolicy: 'network-only' })
-  const bookResult = useQuery(ALL_BOOKS)
+  const filteredBooksResult = useQuery(ALL_BOOKS, { variables: { genre } , fetchPolicy: 'network-only' })
+  const allBooksResult = useQuery(ALL_BOOKS)
   const genreResult = useQuery(FAVOURITE_GENRE)
 
-  if (authorResult.loading || bookResult.loading || genreResult.loading)  {
+  if (authorResult.loading || filteredBooksResult.loading || allBooksResult.loading || genreResult.loading)  {
     return <div>loading...</div>
   }
+
+  const allGenres = allBooksResult.data.allBooks.flatMap(b => b.genres).filter(uniqueValues)
 
   const logout = () => {
     setToken(null)
@@ -42,11 +50,11 @@ const App = () => {
 
       <Authors show={page === 'authors'} authors={authorResult.data.allAuthors} forceUpdate={forceUpdate}/>
 
-      <Books show={page === 'books'} books={bookResult.data.allBooks} />
+      <Books show={page === 'books'} books={filteredBooksResult.data.allBooks} setGenre={setGenre} allGenres={allGenres} />
 
       <NewBook show={page === 'add'} />
       
-      <Recommendations show={page === 'recommendations'} books={bookResult.data.allBooks} genre={genreResult.data.me.favoriteGenre} />
+      <Recommendations show={page === 'recommendations'} books={allBooksResult.data.allBooks} genre={genreResult.data.me ? genreResult.data.me.favoriteGenre : null} />
 
       <Login show={page === 'login'} setToken={setToken} />
     </div>

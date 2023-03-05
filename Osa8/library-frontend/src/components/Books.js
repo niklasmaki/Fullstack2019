@@ -1,21 +1,9 @@
-import { useState } from 'react'
 
-const uniqueValues = (value, index, array) => {
-  return array.indexOf(value) === index
-}
 
-const Books = (props) => {
-  const [genre, setGenre] = useState('all')
-
-  if (!props.show) {
+const Books = ({show, books, setGenre, allGenres}) => {
+  if (!show) {
     return null
   }
-
-  const genres = props.books.flatMap(b => b.genres).filter(uniqueValues)
-
-  const books = genre === 'all' ? 
-                props.books :
-                props.books.filter(b => b.genres.includes(genre))
 
   return (
     <div>
@@ -38,10 +26,10 @@ const Books = (props) => {
         </tbody>
       </table>
       <div>
-      {genres.map(g => (
+      {allGenres.map(g => (
         <button key={g} onClick={() => setGenre(g)}>{g}</button>
       ))}
-      <button onClick={() => setGenre('all')}>all genres</button>
+      <button onClick={() => setGenre('')}>all genres</button>
       </div>
     </div>
   )
